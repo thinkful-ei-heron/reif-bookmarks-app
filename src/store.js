@@ -1,8 +1,14 @@
+/* eslint-disable no-console */
 import * as api from './api.js';
 
-api.createItem(
-  { "title": "t Title", "url": "https://www.test.com", "desc": "gsae", "rating": 5 }
-);
+let currentDb = api.getItems();
+console.log(currentDb);
 
-let currentStore = api.getItems();
-console.log(currentStore);
+export const handleGet = () => {
+};
+export const handleNew = () => {
+};
+export const handleEdit = () => {
+};
+export const handleDelete = () => {
+};

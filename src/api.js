@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const BASE_URL = 'https://thinkful-list-api.herokuapp.com/reif/bookmarks';
 
 const apiFetch = (url, method, body) => {
@@ -20,6 +21,7 @@ const apiFetch = (url, method, body) => {
         alert(error);
         return Promise.reject(error);
       }
+      // console.log(data);
       return data;
     });
 };
@@ -27,13 +29,13 @@ const apiFetch = (url, method, body) => {
 export const getItems = () => {
   // GET
   console.log('getting');
-  return apiFetch(`${BASE_URL}`, "GET");
+  return apiFetch(`${BASE_URL}`, 'GET');
 };
 
 export const createItem = (body) => {
   // POST
   console.log('posting');
-  return apiFetch(`${BASE_URL}`, "POST", body);
+  return apiFetch(`${BASE_URL}`, 'POST', body);
 };
 
 export const updateItem = (id, body) => {
