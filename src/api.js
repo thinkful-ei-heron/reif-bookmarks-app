@@ -21,7 +21,6 @@ const apiFetch = (url, method, body) => {
         alert(error);
         return Promise.reject(error);
       }
-      // console.log(data);
       return data;
     });
 };
