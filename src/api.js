@@ -1,13 +1,13 @@
-const BASE_URL = 'https://thinkful-list-api.herokuapp.com/reif';
+const BASE_URL = 'https://thinkful-list-api.herokuapp.com/reif/bookmarks';
 
-const apiFetch = function (url, method, body) {
+const apiFetch = (url, method, body) => {
   let error = false;
   return fetch(url, {
     method: method,
     headers: {
       'Content-Type': 'application/json'
     },
-    body: body
+    body: JSON.stringify(body)
   })
     .then(res => {
       if (!res.ok) {
@@ -25,14 +25,25 @@ const apiFetch = function (url, method, body) {
 };
 
 export const getItems = () => {
-  return apiFetch(`${BASE_URL}/bookmarks`);
+  // GET
+  console.log('getting');
+  return apiFetch(`${BASE_URL}`, "GET");
 };
 
-export const createItem = () => {
-}
+export const createItem = (body) => {
+  // POST
+  console.log('posting');
+  return apiFetch(`${BASE_URL}`, "POST", body);
+};
 
-export const updateItem = () => {
-}
+export const updateItem = (id, body) => {
+  // PATCH
+  console.log('patching');
+  return apiFetch(`${BASE_URL}/${id}`, 'PATCH', body);
+};
 
-export const deleteItem = () => {
-}
+export const deleteItem = (id) => {
+  // DELETE
+  console.log('deleting');
+  return apiFetch(`${BASE_URL}/${id}`, 'DELETE');
+};
