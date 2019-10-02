@@ -138,6 +138,7 @@ const renderBookmarkForm = () => {
         </select>
       </div>
       <div>
+      <button type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
         <button type="submit" id="new-submit" name="submit-button">Submit</button>
       </div>
     </form>
@@ -179,6 +180,14 @@ const handleClickSubmit = () => {
         createItem(newItem);
         populateStore();
       }
+    }
+  });
+};
+const handleClickCancel = () => {
+  document.addEventListener('click', e => {
+    e.preventDefault();
+    if (e.target === document.getElementById('new-cancel')) {
+      populateStore();
     }
   });
 };
@@ -255,5 +264,6 @@ handleClickNew();
 handleClickSubmit();
 handleClickBookmark();
 handleClickDelete();
+handleClickCancel();
 populateStore();
 // end main.js
