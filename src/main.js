@@ -29,7 +29,7 @@ const apiFetch = (url, method, body) => {
 
 const getItems = () => {
   // GET
-  console.log('getting');
+  // console.log('getting');
   return apiFetch(`${BASE_URL}`, 'GET');
 };
 
@@ -54,9 +54,9 @@ const deleteItem = (id) => {
 
 // store.js stuff
 let bookmarks = [];
-const adding = false;
+let adding = false;
 const error = null;
-const filter = 0;
+let filter = 0;
 
 const addBookmark = function (newBookmark) {
   bookmarks.push(newBookmark);
@@ -71,15 +71,11 @@ const deleteBookmark = function (id) {
   deleteItem(id);
   renderBookmarkList();
 };
-
-const toggleExpand = function (id) {
-
-};
 // end store.js stuff
 
 // bookmarks.js stuff
 let appBody = document.getElementById('app-body');
-let trashCan = '<svg class="trashcan" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>'
+let trashCan = '<svg class="trashcan" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>';
 // const bookmarkList = document.getElementById('bookmark-list');
 
 // render full list
@@ -96,16 +92,27 @@ const renderBookmarkList = () => {
       let items = `
         <section id='top-buttons'>
           <button id='new-bookmark'>Create</button>
-          <button id="filter">Filter</button>
+          <label>Filter:</label>
+          <select id="filter" name="rating"">
+            <option class='filterOption' value="1">1</option>
+            <option class='filterOption' value="2">2</option>
+            <option class='filterOption' value="3">3</option>
+            <option class='filterOption' value="4">4</option>
+            <option class='filterOption' value="5">5</option>
+          </select>
         </section>
         <section id="bookmark-list"></section>`;
-      let markList = bookmarks.map(item => `
-        <section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
+      let markList = bookmarks.map(item => {
+        if (item.rating > filter) {
+          `<section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
           <span class='bookmark-list-title'>${item.title}</span>
           <span class='bookmark-list-rating'>${item.rating}</span>
           <span class='bookmark-list-trashcan'>${trashCan}</span>
         </section>
-      `);
+        `;
+        }
+      }
+      );
       items += markList.join('');
       appBody.innerHTML = items;
     });
@@ -114,35 +121,35 @@ const renderBookmarkList = () => {
 // render new form
 const renderBookmarkForm = () => {
   const formToRender = `
-    <form id='bookmark-form' name='new-bookmark-form'>
-      <div>
-        <label for="new-bookmark-form">Title:</label>
-        <input type="text" name="title" required id="new-title" />
-      </div>
+        <form id='bookmark-form' name='new-bookmark-form'>
         <div>
-        <label for="new-bookmark-form">URL:</label>
-        <input type="url" name="url" id="new-url" required>
+          <label for="new-bookmark-form">Title:</label>
+          <input type="text" name="title" required id="new-title" />
+        </div>
+        <div>
+          <label for="new-bookmark-form">URL:</label>
+          <input type="url" name="url" id="new-url" required>
       </div>
-      <div>
-        <label for="new-bookmark-form">Description:</label>
-        <input type="text" name="desc" id="new-desc" required>
+          <div>
+            <label for="new-bookmark-form">Description:</label>
+            <input type="text" name="desc" id="new-desc" required>
       </div>
-      <div>
-        <label for="new-bookmark-form">Rating</label>
-        <select id="new-rating" name="rating">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select>
-      </div>
-      <div>
-      <button type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
-        <button type="submit" id="new-submit" name="submit-button">Submit</button>
-      </div>
+            <div>
+              <label for="new-bookmark-form">Rating</label>
+              <select id="new-rating" name="rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div>
+              <button type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
+              <button type="submit" id="new-submit" name="submit-button">Submit</button>
+            </div>
     </form>
-  `;
+          `;
   appBody.innerHTML = formToRender;
   // fix
   // No idea why required does nothing.
@@ -154,6 +161,7 @@ const handleClickNew = () => {
     e.preventDefault();
     if (e.target === document.getElementById('new-bookmark')) {
       console.log('cliked on new');
+      adding = true;
       renderBookmarkForm();
     }
   });
@@ -175,9 +183,10 @@ const handleClickSubmit = () => {
           title: document.getElementById('new-title').value,
           url: document.getElementById('new-url').value,
           desc: document.getElementById('new-desc').value,
-          rating: document.getElementById('new-rating').value
+          rating: document.getElementById('new-rating').value,
         };
         createItem(newItem);
+        adding = false;
         populateStore();
       }
     }
@@ -212,6 +221,7 @@ const handleClickBookmark = () => {
         <p>Description: ${toggleTarget.desc}</p>
         <p>Rating: ${toggleTarget.rating}</p>
       `;
+      toggleTarget.expanded = true;
       tar.appendChild(bookmarkDetails);
       document.addEventListener('click', (e) => {
         if (e.target.classList.contains('bookmark-link')) {
@@ -256,6 +266,10 @@ const populateStore = function () {
       });
     })
     .then(() => {
+      bookmarks.forEach(item => item.expanded = false);
+    })
+    .then(() => {
+      // console.log(bookmarks);
       renderBookmarkList();
     });
 };
