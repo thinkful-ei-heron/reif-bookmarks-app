@@ -70,12 +70,9 @@ const deleteBookmark = function (id) {
   bookmarks = bookmarks.filter(currentBookmark => currentBookmark.id !== id);
 };
 
-const updateBookmark = function (id, newData) {
-  let currentBookmark = findBookmark(id);
-  Object.assign(currentBookmark, newData);
+const toggleExpand = function (id) {
+
 };
-// fix
-// const toggleExpand = function (id) {};
 // end store.js stuff
 
 // bookmarks.js stuff
@@ -83,38 +80,49 @@ let appBody = document.getElementById('app-body');
 // const bookmarkList = document.getElementById('bookmark-list');
 
 const renderBookmarkList = () => {
-  let items = `<section id='top-buttons'>
-        <button id='new-bookmark'>Create</button>
-        <button id="filter">Filter</button>
-      </section>
-      <section id="bookmark-list"></section>`;
-  let markList = bookmarks.map(item => `
-    <section class='bookmark-list-item'>
-      <span class='bookmark-list-title'>${item.title}</span>
-      <span class='bookmark-list-rating'>${item.rating}</span>
-    </section>
-  `);
-  items += markList.join('');
-  appBody.innerHTML = items;
+  bookmarks = [];
+  getItems()
+    .then((response) => {
+      response.forEach((mark) => {
+        bookmarks.push(mark);
+      });
+    })
+    // .then(() => console.log(bookmarks))
+    .then(() => {
+      let items = `
+        <section id='top-buttons'>
+          <button id='new-bookmark'>Create</button>
+          <button id="filter">Filter</button>
+        </section>
+        <section id="bookmark-list"></section>`;
+      let markList = bookmarks.map(item => `
+        <section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
+          <span class='bookmark-list-title'>${item.title}</span>
+          <span class='bookmark-list-rating'>${item.rating}</span>
+        </section>
+      `);
+      items += markList.join('');
+      appBody.innerHTML = items;
+    });
 };
 
 const renderBookmarkForm = () => {
-  const form = `
+  const formToRender = `
     <form id='bookmark-form' name='new-bookmark-form'>
-      <div class="form-group">
-        <label for="title">Title:</label>
-        <input type="text" name:"title" id="new-title" required />
+      <div>
+        <label for="new-bookmark-form">Title:</label>
+        <input type="text" name="title" required id="new-title" />
       </div>
-        <div class="form-group">
-        <label for="url">URL:</label>
-        <input type="url" name:"url" id="new-url" required />
+        <div>
+        <label for="new-bookmark-form">URL:</label>
+        <input type="url" name="url" id="new-url" required>
       </div>
-      <div class="form-group">
-        <label for="desc">Description:</label>
-        <input type="text" name:"desc" id="new-desc" required />
+      <div>
+        <label for="new-bookmark-form">Description:</label>
+        <input type="text" name="desc" id="new-desc" required>
       </div>
-      <div class="form-group">
-        <label for="rating">Rating</label>
+      <div>
+        <label for="new-bookmark-form">Rating</label>
         <select id="new-rating" name="rating">
           <option value="1">1</option>
           <option value="2">2</option>
@@ -123,12 +131,14 @@ const renderBookmarkForm = () => {
           <option value="5">5</option>
         </select>
       </div>
-      <div class="form-group">
-        <input type="button" id="new-submit" name:"submit-button" value="Submit">
+      <div>
+        <button type="submit" id="new-submit" name="submit-button">Submit</button>
       </div>
     </form>
   `;
-  appBody.innerHTML = form;
+  appBody.innerHTML = formToRender;
+  // fix
+  // No idea why required does nothing.
 };
 
 const handleClickNew = () => {
@@ -146,24 +156,52 @@ const handleClickSubmit = () => {
     e.preventDefault();
     if (e.target === document.getElementById('new-submit')) {
       console.log('cliked on submit');
-      let newItem = {
-        title: document.getElementById('new-title').value,
-        url: document.getElementById('new-url').value,
-        desc: document.getElementById('new-desc').value,
-        rating: document.getElementById('new-rating').value
-      };
-      createItem(newItem);
-      populateStore();
+      const validForm = document.getElementById('bookmark-form').checkValidity();
+      if (!validForm) {
+        console.log('invalid');
+        // fix
+        // see above in renderBookmarkForm
+      } else {
+        let newItem = {
+          title: document.getElementById('new-title').value,
+          url: document.getElementById('new-url').value,
+          desc: document.getElementById('new-desc').value,
+          rating: document.getElementById('new-rating').value
+        };
+        createItem(newItem);
+        populateStore();
+      }
     }
   });
 };
 
+// fix
+// expand feature
 const handleClickBookmark = () => {
   document.addEventListener('click', (e) => {
     e.preventDefault();
-    if (e.target.classList.contains('bookmark-list-item') || e.target.classList.contains('bookmark-list-title') || e.target.classList.contains('bookmark-list-rating')) {
-      console.log(`clicked on: ${e.target}`);
+    let tar;
+    if (e.target.classList.contains('bookmark-list-title')) {
+      tar = e.target.closest('.bookmark-list-item');
+      console.log(`clicked on ${tar.className}`);
+    } else {
+      return null;
     }
+    if (!document.getElementById('bookmark-expanded')) {
+      let toggleTarget = findBookmark(tar.dataset.bookmarkId);
+      let bookmarkDetails = document.createElement('div');
+      bookmarkDetails.id = 'bookmark-expanded';
+      bookmarkDetails.innerHTML = `
+        <p>Title: ${toggleTarget.title}</p>
+        <p>URL: ${toggleTarget.url}</p>
+        <p>DESC: ${toggleTarget.desc}</p>
+        <p>RATING: ${toggleTarget.rating}</p>
+      `;
+      tar.appendChild(bookmarkDetails);
+    } else {
+      tar.lastChild.remove();
+    }
+
   });
 };
 // end bookmark.js stuff
