@@ -39,11 +39,11 @@ const createItem = (body) => {
   return apiFetch(`${BASE_URL}`, 'POST', body);
 };
 
-const updateItem = (id, body) => {
-  // PATCH
-  console.log('patching');
-  return apiFetch(`${BASE_URL}/${id}`, 'PATCH', body);
-};
+// const updateItem = (id, body) => {
+//   // PATCH
+//   console.log('patching');
+//   return apiFetch(`${BASE_URL}/${id}`, 'PATCH', body);
+// };
 
 const deleteItem = (id) => {
   // DELETE
@@ -102,17 +102,13 @@ const renderBookmarkList = () => {
           </select>
         </section>
         <section id="bookmark-list"></section>`;
-      let markList = bookmarks.map(item => {
-        if (item.rating > filter) {
-          `<section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
+      let markList = bookmarks.map(item => `
+        <section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
           <span class='bookmark-list-title'>${item.title}</span>
           <span class='bookmark-list-rating'>${item.rating}</span>
           <span class='bookmark-list-trashcan'>${trashCan}</span>
         </section>
-        `;
-        }
-      }
-      );
+      `);
       items += markList.join('');
       appBody.innerHTML = items;
     });
@@ -121,35 +117,35 @@ const renderBookmarkList = () => {
 // render new form
 const renderBookmarkForm = () => {
   const formToRender = `
-        <form id='bookmark-form' name='new-bookmark-form'>
-        <div>
-          <label for="new-bookmark-form">Title:</label>
-          <input type="text" name="title" required id="new-title" />
-        </div>
-        <div>
-          <label for="new-bookmark-form">URL:</label>
-          <input type="url" name="url" id="new-url" required>
+    <form id='bookmark-form' name='new-bookmark-form'>
+      <div>
+        <label for="new-bookmark-form">Title:</label>
+        <input type="text" name="title" required id="new-title" />
       </div>
-          <div>
-            <label for="new-bookmark-form">Description:</label>
-            <input type="text" name="desc" id="new-desc" required>
+      <div>
+        <label for="new-bookmark-form">URL:</label>
+        <input type="url" name="url" id="new-url" required>
       </div>
-            <div>
-              <label for="new-bookmark-form">Rating</label>
-              <select id="new-rating" name="rating">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-            </div>
-            <div>
-              <button type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
-              <button type="submit" id="new-submit" name="submit-button">Submit</button>
-            </div>
+      <div>
+        <label for="new-bookmark-form">Description:</label>
+        <input type="text" name="desc" id="new-desc" required>
+      </div>
+      <div>
+        <label for="new-bookmark-form">Rating</label>
+        <select id="new-rating" name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div>
+        <button type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
+        <button type="submit" id="new-submit" name="submit-button">Submit</button>
+      </div>
     </form>
-          `;
+  `;
   appBody.innerHTML = formToRender;
   // fix
   // No idea why required does nothing.
@@ -231,7 +227,6 @@ const handleClickBookmark = () => {
     } else {
       tar.lastChild.remove();
     }
-
   });
 };
 
