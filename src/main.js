@@ -80,16 +80,30 @@ const updateBookmark = function (id, newData) {
 // const toggleExpand = function (id) {};
 
 // end store stuff
+// let appBody = document.getElementById('app-body');
+const bookmarkList = document.getElementById('bookmark-list');
 
-
-const populateStore = function () {
-  getItems()
-    .then((item) => {
-      item.forEach((item) => {
-        bookmarks.push(item);
-      });
-    });
+const renderBookmarkList = () => {
+  const items = (bookmarks.map(item => `
+    <section class='bookmark-list-item'>
+      <span class='bookmark-list-title'>${item.title}</span>
+      <span class='bookmark-list-rating'>${item.rating}</span>
+    </section>
+  `)).join('');
+  bookmarkList.innerHTML = items;
 };
 
+// start main.js
+const populateStore = function () {
+  getItems()
+    .then((response) => {
+      response.forEach((mark) => {
+        bookmarks.push(mark);
+      });
+    })
+    .then(() => {
+      renderBookmarkList();
+    });
+};
 populateStore();
-console.log(bookmarks);
+// end main.js
