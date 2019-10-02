@@ -53,7 +53,6 @@ const deleteItem = (id) => {
 // End API.js stuff
 
 // store.js stuff
-
 let bookmarks = [];
 const adding = false;
 const error = null;
@@ -75,14 +74,11 @@ const updateBookmark = function (id, newData) {
   let currentBookmark = findBookmark(id);
   Object.assign(currentBookmark, newData);
 };
-
 // fix
 // const toggleExpand = function (id) {};
-
 // end store.js stuff
 
 // bookmarks.js stuff
-
 let appBody = document.getElementById('app-body');
 // const bookmarkList = document.getElementById('bookmark-list');
 
@@ -150,11 +146,17 @@ const handleClickSubmit = () => {
     e.preventDefault();
     if (e.target === document.getElementById('new-submit')) {
       console.log('cliked on submit');
-      renderBookmarkList();
+      let newItem = {
+        title: document.getElementById('new-title').value,
+        url: document.getElementById('new-url').value,
+        desc: document.getElementById('new-desc').value,
+        rating: document.getElementById('new-rating').value
+      };
+      createItem(newItem);
+      populateStore();
     }
   });
 };
-
 // end bookmark.js stuff
 
 // start main.js
@@ -176,5 +178,4 @@ const populateStore = function () {
 populateStore();
 handleClickNew();
 handleClickSubmit();
-
 // end main.js
