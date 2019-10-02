@@ -54,13 +54,13 @@ const deleteItem = (id) => {
 
 // store stuff
 
-const bookmarks = [];
+let bookmarks = [];
 const adding = false;
 const error = null;
 const filter = 0;
 
 const addBookmark = function (newBookmark) {
-  this.bookmarks.push(newBookmark);
+  bookmarks.push(newBookmark);
 };
 
 const findBookmark = function (id) {
@@ -68,11 +68,11 @@ const findBookmark = function (id) {
 };
 
 const deleteBookmark = function (id) {
-  this.bookmarks = this.bookmarks.filter(currentBookmark => currentBookmark.id !== id);
+  bookmarks = bookmarks.filter(currentBookmark => currentBookmark.id !== id);
 };
 
 const updateBookmark = function (id, newData) {
-  let currentBookmark = this.findById(id);
+  let currentBookmark = findBookmark(id);
   Object.assign(currentBookmark, newData);
 };
 
