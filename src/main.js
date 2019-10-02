@@ -68,6 +68,8 @@ const findBookmark = function (id) {
 
 const deleteBookmark = function (id) {
   bookmarks = bookmarks.filter(currentBookmark => currentBookmark.id !== id);
+  deleteItem(id);
+  renderBookmarkList();
 };
 
 const toggleExpand = function (id) {
@@ -77,7 +79,7 @@ const toggleExpand = function (id) {
 
 // bookmarks.js stuff
 let appBody = document.getElementById('app-body');
-let trashCan = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>'
+let trashCan = '<svg class="trashcan" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>'
 // const bookmarkList = document.getElementById('bookmark-list');
 
 // render full list
@@ -214,6 +216,25 @@ const handleClickBookmark = () => {
   });
 };
 
+const handleClickDelete = () => {
+  document.addEventListener('click', e => {
+    e.preventDefault();
+    if (e.target.classList.contains('trashcan')) {
+      console.log('trashcan clicked');
+      if (confirm('Are you sure you want to delete this bookmark?')) {
+        console.log('clicked yes');
+        let tar = e.target.closest('.bookmark-list-item');
+        tar = tar.dataset.bookmarkId;
+        let delTar = findBookmark(tar);
+        deleteItem(delTar.id);
+        populateStore();
+      } else {
+        console.log('clicked no');
+      }
+    }
+  });
+};
+
 
 // end bookmark.js stuff
 
@@ -233,5 +254,6 @@ const populateStore = function () {
 handleClickNew();
 handleClickSubmit();
 handleClickBookmark();
+handleClickDelete();
 populateStore();
 // end main.js
