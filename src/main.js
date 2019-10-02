@@ -103,15 +103,15 @@ const renderBookmarkForm = () => {
     <form id='bookmark-form' name='new-bookmark-form'>
       <div class="form-group">
         <label for="title">Title:</label>
-        <input type="text" name:"title" id="new-title" required>
+        <input type="text" name:"title" id="new-title" required />
       </div>
         <div class="form-group">
         <label for="url">URL:</label>
-        <input type="url" name:"url" id="new-url" required>
+        <input type="url" name:"url" id="new-url" required />
       </div>
       <div class="form-group">
         <label for="desc">Description:</label>
-        <input type="text" name:"desc" id="new-desc" required>
+        <input type="text" name:"desc" id="new-desc" required />
       </div>
       <div class="form-group">
         <label for="rating">Rating</label>
@@ -142,7 +142,7 @@ const handleClickNew = () => {
 };
 
 const handleClickSubmit = () => {
-  document.addEventListener('click', function (e) {
+  document.addEventListener('click', (e) => {
     e.preventDefault();
     if (e.target === document.getElementById('new-submit')) {
       console.log('cliked on submit');
@@ -154,6 +154,15 @@ const handleClickSubmit = () => {
       };
       createItem(newItem);
       populateStore();
+    }
+  });
+};
+
+const handleClickBookmark = () => {
+  document.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (e.target.classList.contains('bookmark-list-item') || e.target.classList.contains('bookmark-list-title') || e.target.classList.contains('bookmark-list-rating')) {
+      console.log(`clicked on: ${e.target}`);
     }
   });
 };
@@ -170,12 +179,10 @@ const populateStore = function () {
     .then(() => {
       renderBookmarkList();
     });
-  // making sure renderBookmarkForm works
-  // .then(() => {
-  //   renderBookmarkForm();
-  // });
 };
-populateStore();
+
 handleClickNew();
 handleClickSubmit();
+handleClickBookmark();
+populateStore();
 // end main.js
