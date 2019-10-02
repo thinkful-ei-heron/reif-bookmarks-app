@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-// API stuff
+// API.js stuff
 const BASE_URL = 'https://thinkful-list-api.herokuapp.com/reif/bookmarks';
 
 const apiFetch = (url, method, body) => {
@@ -50,9 +50,9 @@ const deleteItem = (id) => {
   console.log('deleting');
   return apiFetch(`${BASE_URL}/${id}`, 'DELETE');
 };
-// End API stuff
+// End API.js stuff
 
-// store stuff
+// store.js stuff
 
 let bookmarks = [];
 const adding = false;
@@ -79,19 +79,64 @@ const updateBookmark = function (id, newData) {
 // fix
 // const toggleExpand = function (id) {};
 
-// end store stuff
-// let appBody = document.getElementById('app-body');
-const bookmarkList = document.getElementById('bookmark-list');
+// end store.js stuff
+
+// bookmarks.js stuff
+
+let appBody = document.getElementById('app-body');
+// const bookmarkList = document.getElementById('bookmark-list');
 
 const renderBookmarkList = () => {
-  const items = (bookmarks.map(item => `
+  let items = `<section id='top-buttons'>
+        <button id='new-bookmark'>Create</button>
+        <button id="filter">Filter</button>
+      </section>
+      <section id="bookmark-list"></section>`;
+  let markList = bookmarks.map(item => `
     <section class='bookmark-list-item'>
       <span class='bookmark-list-title'>${item.title}</span>
       <span class='bookmark-list-rating'>${item.rating}</span>
     </section>
-  `)).join('');
-  bookmarkList.innerHTML = items;
+  `);
+  items += markList.join('');
+  appBody.innerHTML = items;
 };
+
+const renderBookmarkForm = () => {
+  const form = `
+    <form id='bookmark-form' name='new-bookmark-form'>
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" name:"title" id="new-title" required>
+      </div>
+        <div class="form-group">
+        <label for="url">URL:</label>
+        <input type="url" name:"url" id="new-url" required>
+      </div>
+      <div class="form-group">
+        <label for="desc">Description:</label>
+        <input type="text" name:"desc" id="new-desc" required>
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating</label>
+        <select id="new-rating" name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="button" id="new-submit-button" name:"submit-button" value="Submit">
+      </div>
+    </form>
+  `;
+  appBody.innerHTML = form;
+
+};
+
+// end bookmark.js stuff
 
 // start main.js
 const populateStore = function () {
@@ -103,6 +148,9 @@ const populateStore = function () {
     })
     .then(() => {
       renderBookmarkList();
+    })
+    .then(() => {
+      renderBookmarkForm();
     });
 };
 populateStore();
