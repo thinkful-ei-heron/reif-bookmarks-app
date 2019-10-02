@@ -128,12 +128,31 @@ const renderBookmarkForm = () => {
         </select>
       </div>
       <div class="form-group">
-        <input type="button" id="new-submit-button" name:"submit-button" value="Submit">
+        <input type="button" id="new-submit" name:"submit-button" value="Submit">
       </div>
     </form>
   `;
   appBody.innerHTML = form;
+};
 
+const handleClickNew = () => {
+  document.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (e.target === document.getElementById('new-bookmark')) {
+      console.log('cliked on new');
+      renderBookmarkForm();
+    }
+  });
+};
+
+const handleClickSubmit = () => {
+  document.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (e.target === document.getElementById('new-submit')) {
+      console.log('cliked on submit');
+      renderBookmarkList();
+    }
+  });
 };
 
 // end bookmark.js stuff
@@ -148,10 +167,14 @@ const populateStore = function () {
     })
     .then(() => {
       renderBookmarkList();
-    })
-    .then(() => {
-      renderBookmarkForm();
     });
+  // making sure renderBookmarkForm works
+  // .then(() => {
+  //   renderBookmarkForm();
+  // });
 };
 populateStore();
+handleClickNew();
+handleClickSubmit();
+
 // end main.js
