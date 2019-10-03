@@ -7,8 +7,6 @@ const startApp = () => {
   bookmarks.handleDelete();
   bookmarks.handleNewSubmit();
   bookmarks.handleNewCancel();
-  bookmarks.handleExpand();
-  bookmarks.handleDelete();
 
   api.getItems()
     .then((response) => {

@@ -115,9 +115,21 @@ const generateDetails = (target) => {
   <span>Rating: ${target.rating}</span>`;
 };
 
-const renderExpandedDetails = (tar) => {
-  let details = generateDetails(tar);
-  tar.innerHTML = details;
+const renderExpandedDetails = (target) => {
+  let details = generateDetails(target);
+  target.innerHTML = details;
+};
+export const handleExpand = () => {
+  document.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (event.target.classList.contains('bookmark-list-title')) {
+      let tar = event.target.parentNode.dataset.bookmarkId;
+      let tarBookmark = findBookmark(tar);
+      console.log(tar);
+      console.log(`clicked on ${tarBookmark}`);
+      renderExpandedDetails(tarBookmark);
+    }
+  });
 };
 
 // Event handlers
@@ -136,7 +148,6 @@ export const handleNewSubmit = () => {
   document.addEventListener('click', (event) => {
     event.preventDefault();
     if (event.target === document.getElementById('new-submit')) {
-      // console.log('clicked on submit');
       let newItem = {
         title: document.getElementById('new-title').value,
         url: document.getElementById('new-url').value,
@@ -162,34 +173,20 @@ export const handleNewCancel = () => {
   document.addEventListener('click', e => {
     e.preventDefault();
     if (e.target === document.getElementById('new-cancel')) {
-      // console.log('clicked cancel');
       renderAppBody();
-    }
-  });
-};
-
-export const handleExpand = () => {
-  document.addEventListener('click', (event) => {
-    event.preventDefault();
-    let tar;
-    if (event.target.classList.contains('bookmark-list-title')) {
-      tar = findBookmark(event.target.parentNode.dataset.bookmarkId);
-      console.log(`clicked on ${tar}`);
-      renderExpandedDetails(tar);
     }
   });
 };
 
 export const handleDelete = () => {
   // fix
-  //   document.addEventListener('click', (event) => {
-  //     event.preventDefault();
-  //     if (event.target.nodeName === 'IMG') {
-  //       console.log('clicked an img');
-  //       let tar = findBookmark(event.target.closest('.bookmark-list-item').dataset.bookmarkId);
-  //       api.deleteItem(tar);
-  //       renderAppBody();
-  //     }
-  //   });
+  document.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (event.target.nodeName === 'IMG') {
+      let tar = findBookmark(event.target.closest('.bookmark-list-item').dataset.bookmarkId).id;
+      api.deleteItem(tar)
+        .then(() => renderAppBody());
+    }
+  });
 };
 export const handleFilter = () => { };
