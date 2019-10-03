@@ -4,15 +4,6 @@ import * as store from './store.js';
 
 
 
-// Getters 
-const findBookmark = function (id) {
-  return store.DATA.bookmarks.find(currentBookmark => currentBookmark.id === id);
-};
-
-const findAndDelete = function (id) {
-  store.DATA.bookmarks = store.DATA.bookmarks.filter(currentItem => currentItem.id !== id);
-};
-
 // Generators
 const generateTopButtons = () => {
   let list = `<section id='top-buttons'>
@@ -31,7 +22,6 @@ const generateTopButtons = () => {
 
 const generateBookmarkList = () => {
   let output = '';
-  // console.log(store.DATA.bookmarks);
   store.DATA.bookmarks.map(item => {
     if (item.rating >= store.DATA.filter) {
       output += `<section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
@@ -107,13 +97,16 @@ export const handleExpand = () => {
     if (event.target.classList.contains('bookmark-list-title')) {
       if (!document.querySelector('#bookmark-details')) {
         let tar = event.target.parentNode.dataset.bookmarkId;
-        let tarBookmark = findBookmark(tar);
+        let tarBookmark = store.findBookmark(tar);
+        tarBookmark.expanded = true;
         console.log(tar);
         console.log(`clicked on ${tarBookmark}`);
-        // renderExpandedDetails(tarBookmark);
         event.target.parentNode.innerHTML += renderExpandedDetails(tarBookmark);
       } else if (event.target.parentNode.lastChild.id === 'bookmark-details') {
         event.target.parentNode.lastChild.remove();
+        let tar = event.target.parentNode.dataset.bookmarkId;
+        let tarBookmark = store.findBookmark(tar);
+        tarBookmark.expanded = false;
       }
     }
   });
@@ -169,8 +162,8 @@ export const handleDelete = () => {
   document.addEventListener('click', (event) => {
     event.preventDefault();
     if (event.target.nodeName === 'IMG') {
-      let tar = findBookmark(event.target.closest('.bookmark-list-item').dataset.bookmarkId).id;
-      findAndDelete(tar);
+      let tar = store.findBookmark(event.target.closest('.bookmark-list-item').dataset.bookmarkId).id;
+      store.findAndDelete(tar);
       api.deleteItem(tar)
         .then(() => renderAppBody());
     }
