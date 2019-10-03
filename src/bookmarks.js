@@ -2,24 +2,7 @@
 import * as api from './api.js';
 
 export const DATA = {
-  bookmarks: [
-    {
-      id: 'x56w',
-      title: 'Title 1',
-      rating: 3,
-      url: 'http://www.title1.com',
-      description: 'lorem ipsum dolor sit',
-      expanded: false
-    },
-    {
-      id: '6ffw',
-      title: 'Title 2',
-      rating: 5,
-      url: 'http://www.title2.com',
-      description: 'dolorum tempore deserunt',
-      expanded: false
-    }
-  ],
+  bookmarks: [],
   adding: false,
   error: null,
   filter: 0
@@ -108,16 +91,13 @@ const renderNewBookmarkForm = () => {
   appBody.innerHTML = form;
 };
 
-const generateDetails = (target) => {
-  console.log(`inside expanded ${target}`);
-  return `<button class='bookmark-link'>Visit Site</button>
-  <span>Description: ${target.desc}</span>
-  <span>Rating: ${target.rating}</span>`;
-};
-
 const renderExpandedDetails = (target) => {
-  let details = generateDetails(target);
-  target.innerHTML = details;
+  let details = `<section id='bookmark-details'>
+  <button class='bookmark-link'>Visit Site</button>
+  <span>${target.desc}</span>
+  <span>Rating: ${target.rating}</span>
+  </section>`;
+  return details;
 };
 export const handleExpand = () => {
   document.addEventListener('click', (event) => {
@@ -127,7 +107,8 @@ export const handleExpand = () => {
       let tarBookmark = findBookmark(tar);
       console.log(tar);
       console.log(`clicked on ${tarBookmark}`);
-      renderExpandedDetails(tarBookmark);
+      // renderExpandedDetails(tarBookmark);
+      event.target.parentNode.innerHTML += renderExpandedDetails(tarBookmark);
     }
   });
 };
@@ -184,8 +165,7 @@ export const handleDelete = () => {
     event.preventDefault();
     if (event.target.nodeName === 'IMG') {
       let tar = findBookmark(event.target.closest('.bookmark-list-item').dataset.bookmarkId).id;
-      api.deleteItem(tar)
-        .then(() => renderAppBody());
+      api.deleteItem(tar).then(() => renderAppBody());
     }
   });
 };
