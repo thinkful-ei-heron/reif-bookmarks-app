@@ -1,20 +1,16 @@
 /* eslint-disable no-console */
 import * as api from './api.js';
+import * as store from './store.js';
 
-export const DATA = {
-  bookmarks: [],
-  adding: false,
-  error: null,
-  filter: 0
-};
+
 
 // Getters 
 const findBookmark = function (id) {
-  return DATA.bookmarks.find(currentBookmark => currentBookmark.id === id);
+  return store.DATA.bookmarks.find(currentBookmark => currentBookmark.id === id);
 };
 
 const findAndDelete = function (id) {
-  DATA.bookmarks = DATA.bookmarks.filter(currentItem => currentItem.id !== id);
+  store.DATA.bookmarks = store.DATA.bookmarks.filter(currentItem => currentItem.id !== id);
 };
 
 // Generators
@@ -35,9 +31,9 @@ const generateTopButtons = () => {
 
 const generateBookmarkList = () => {
   let output = '';
-  // console.log(DATA.bookmarks);
-  DATA.bookmarks.map(item => {
-    if (item.rating >= DATA.filter) {
+  // console.log(store.DATA.bookmarks);
+  store.DATA.bookmarks.map(item => {
+    if (item.rating >= store.DATA.filter) {
       output += `<section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
           <span class='bookmark-list-title'>${item.title}</span>
           <span class='bookmark-list-rating'>${item.rating}</span>
@@ -109,12 +105,16 @@ export const handleExpand = () => {
   document.addEventListener('click', (event) => {
     event.preventDefault();
     if (event.target.classList.contains('bookmark-list-title')) {
-      let tar = event.target.parentNode.dataset.bookmarkId;
-      let tarBookmark = findBookmark(tar);
-      console.log(tar);
-      console.log(`clicked on ${tarBookmark}`);
-      // renderExpandedDetails(tarBookmark);
-      event.target.parentNode.innerHTML += renderExpandedDetails(tarBookmark);
+      if (!document.querySelector('#bookmark-details')) {
+        let tar = event.target.parentNode.dataset.bookmarkId;
+        let tarBookmark = findBookmark(tar);
+        console.log(tar);
+        console.log(`clicked on ${tarBookmark}`);
+        // renderExpandedDetails(tarBookmark);
+        event.target.parentNode.innerHTML += renderExpandedDetails(tarBookmark);
+      } else {
+        event.target.parentNode.lastChild.remove();
+      }
     }
   });
 };
@@ -125,7 +125,7 @@ export const handleNew = () => {
     event.preventDefault();
     if (event.target === document.getElementById('new-bookmark')) {
       // console.log('cliked on new');
-      DATA.adding = true;
+      store.DATA.adding = true;
       renderNewBookmarkForm();
     }
   });
@@ -142,13 +142,13 @@ export const handleNewSubmit = () => {
         rating: document.getElementById('new-rating').value,
       };
       api.createItem(newItem);
-      DATA.adding = false;
+      store.DATA.adding = false;
       // empty bookmarks and refresh from api after adding new item
-      DATA.bookmarks = [];
+      store.DATA.bookmarks = [];
       api.getItems()
         .then((response) => {
           response.forEach((mark) => {
-            DATA.bookmarks.push(mark);
+            store.DATA.bookmarks.push(mark);
           });
         })
         .then(() => renderAppBody());
@@ -166,7 +166,6 @@ export const handleNewCancel = () => {
 };
 
 export const handleDelete = () => {
-  // fix
   document.addEventListener('click', (event) => {
     event.preventDefault();
     if (event.target.nodeName === 'IMG') {
@@ -180,9 +179,7 @@ export const handleDelete = () => {
 export const handleFilter = () => {
   const dropDown = document.getElementById('filter');
   dropDown.addEventListener('change', (e) => {
-    e.preventDefault();
-    console.log('something changed');
-    DATA.filter = dropDown.options[dropDown.selectedIndex].text;
+    store.DATA.filter = dropDown.options[dropDown.selectedIndex].text;
     renderAppBody();
   });
 };

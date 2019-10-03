@@ -1,5 +1,6 @@
 import * as bookmarks from './bookmarks.js';
 import * as api from './api.js';
+import * as store from './store.js';
 
 const startApp = () => {
   bookmarks.handleNew();
@@ -12,7 +13,7 @@ const startApp = () => {
     .then((response) => {
       response.forEach((mark) => {
         mark.expanded = false;
-        bookmarks.DATA.bookmarks.push(mark);
+        store.DATA.bookmarks.push(mark);
       });
     })
     .then(() => bookmarks.renderAppBody());
