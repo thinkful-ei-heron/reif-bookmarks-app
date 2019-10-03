@@ -8,6 +8,7 @@ import * as store from './store.js';
 const generateTopButtons = () => {
   let list = `<section id='top-buttons'>
     <button id='new-bookmark'>Create</button>
+    <div class='filter-div'>
     <label>Filter:</label>
     <select id="filter" name="rating"">
       <option class='opOne' value="1">1</option>
@@ -16,6 +17,7 @@ const generateTopButtons = () => {
       <option class='opFour' value="4">4</option>
       <option class='opFive' value="5">5</option>
     </select>
+    </div>
   </section>`;
   return list;
 };
@@ -26,8 +28,10 @@ const generateBookmarkList = () => {
     if (item.rating >= store.DATA.filter) {
       output += `<section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
           <span class='bookmark-list-title'>${item.title}</span>
-          <span class='bookmark-list-rating'>${item.rating}</span>
-          <img class='bookmark-list-trashcan' src='./src/trashCan.svg'>
+          <div class='list-item-right'>
+            <span class='bookmark-list-rating'>${item.rating}</span>
+            <img class='bookmark-list-trashcan' src='./src/trashCan.svg'>
+          </div>
         </section>`;
     }
   });
@@ -37,19 +41,19 @@ const generateBookmarkList = () => {
 const generateNewBookmarkForm = () => {
   let newForm = `
     <form id='bookmark-form' name='new-bookmark-form'>
-      <div>
+      <div class='input-div'>
         <label for="new-bookmark-form">Title:</label>
         <input type="text" name="title" required id="new-title" />
       </div>
-      <div>
+      <div class='input-div'>
         <label for="new-bookmark-form">URL:</label>
         <input type="url" name="url" id="new-url" required>
       </div>
-      <div>
+      <div class='input-div'>
         <label for="new-bookmark-form">Description:</label>
         <input type="text" name="desc" id="new-desc" required>
       </div>
-      <div>
+      <div class='input-div'>
         <label for="new-bookmark-form">Rating</label>
         <select id="new-rating" name="rating">
           <option value="1">1</option>
@@ -59,9 +63,9 @@ const generateNewBookmarkForm = () => {
           <option value="5">5</option>
         </select>
       </div>
-      <div>
-        <button type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
-        <button type="submit" id="new-submit" name="submit-button">Submit</button>
+      <div id='form-button-container'>
+        <button class='form-button' type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
+        <button class='form-button' type="submit" id="new-submit" name="submit-button">Submit</button>
       </div>
     </form>
   `;
