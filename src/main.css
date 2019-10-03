@@ -1,3 +1,7 @@
+body {
+  font-size: 1.2rem;
+}
+
 .container {
   width: 380px;
   margin: 0 auto;
@@ -41,16 +45,19 @@
   width: 340px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center
 }
 
 #top-buttons {
+  width: 280px;
   display: flex;
   justify-content: space-around;
 }
 
 .bookmark-list-item {
-  width: 300px;
+  width: 280px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  margin: 10px;
 }
