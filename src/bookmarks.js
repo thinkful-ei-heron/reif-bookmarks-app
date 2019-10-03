@@ -12,6 +12,11 @@ export const DATA = {
 const findBookmark = function (id) {
   return DATA.bookmarks.find(currentBookmark => currentBookmark.id === id);
 };
+
+const findAndDelete = function (id) {
+  DATA.bookmarks = DATA.bookmarks.filter(currentItem => currentItem.id !== id);
+};
+
 // Generators
 const generateTopButtons = () => {
   let list = `<section id='top-buttons'>
@@ -84,6 +89,7 @@ export const renderAppBody = () => {
   const bookList = generateBookmarkList();
   appBody.innerHTML = topButtons;
   appBody.innerHTML += bookList;
+  handleFilter();
 };
 
 const renderNewBookmarkForm = () => {
@@ -165,8 +171,18 @@ export const handleDelete = () => {
     event.preventDefault();
     if (event.target.nodeName === 'IMG') {
       let tar = findBookmark(event.target.closest('.bookmark-list-item').dataset.bookmarkId).id;
-      api.deleteItem(tar).then(() => renderAppBody());
+      findAndDelete(tar);
+      api.deleteItem(tar)
+        .then(() => renderAppBody());
     }
   });
 };
-export const handleFilter = () => { };
+export const handleFilter = () => {
+  const dropDown = document.getElementById('filter');
+  dropDown.addEventListener('change', (e) => {
+    e.preventDefault();
+    console.log('something changed');
+    DATA.filter = dropDown.options[dropDown.selectedIndex].text;
+    renderAppBody();
+  });
+};

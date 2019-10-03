@@ -17,5 +17,4 @@ const startApp = () => {
     })
     .then(() => bookmarks.renderAppBody());
 };
-
 startApp();
