@@ -112,7 +112,7 @@ export const handleExpand = () => {
         console.log(`clicked on ${tarBookmark}`);
         // renderExpandedDetails(tarBookmark);
         event.target.parentNode.innerHTML += renderExpandedDetails(tarBookmark);
-      } else {
+      } else if (event.target.parentNode.lastChild.id === 'bookmark-details') {
         event.target.parentNode.lastChild.remove();
       }
     }
