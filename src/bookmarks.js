@@ -40,21 +40,21 @@ const generateBookmarkList = () => {
 
 const generateNewBookmarkForm = () => {
   let newForm = `
-    <form id='bookmark-form' name='new-bookmark-form'>
+    <form id='bookmark-form'>
       <div class='input-div'>
-        <label for="new-bookmark-form">Title:</label>
-        <input type="text" name="title" required id="new-title" />
+        <label>Title:</label>
+        <input type="text" id="new-title" required/>
       </div>
       <div class='input-div'>
-        <label for="new-bookmark-form">URL:</label>
-        <input type="url" name="url" id="new-url" required>
+        <label>URL:</label>
+        <input type="url" id="new-url" name="name" required/>
       </div>
       <div class='input-div'>
-        <label for="new-bookmark-form">Description:</label>
-        <input type="text" name="desc" id="new-desc" required>
+        <label>Description:</label>
+        <input type="text" id="new-desc"/>
       </div>
       <div class='input-div'>
-        <label for="new-bookmark-form">Rating</label>
+        <label>Rating</label>
         <select id="new-rating" name="rating">
           <option value="1">1</option>
           <option value="2">2</option>
@@ -64,8 +64,8 @@ const generateNewBookmarkForm = () => {
         </select>
       </div>
       <div id='form-button-container'>
-        <button class='form-button' type='submit' id='new-cancel' name='cancel-button'>Cancel</button>
-        <button class='form-button' type="submit" id="new-submit" name="submit-button">Submit</button>
+        <button class='form-button' id='new-cancel'>Cancel</button>
+        <button class='form-button' type="submit" id="new-submit" >Submit</button>
       </div>
     </form>
   `;
@@ -132,23 +132,35 @@ export const handleNewSubmit = () => {
   document.addEventListener('click', (event) => {
     event.preventDefault();
     if (event.target === document.getElementById('new-submit')) {
-      let newItem = {
-        title: document.getElementById('new-title').value,
-        url: document.getElementById('new-url').value,
-        desc: document.getElementById('new-desc').value,
-        rating: document.getElementById('new-rating').value,
-      };
-      api.createItem(newItem);
-      store.DATA.adding = false;
-      // empty bookmarks and refresh from api after adding new item
-      store.DATA.bookmarks = [];
-      api.getItems()
-        .then((response) => {
-          response.forEach((mark) => {
-            store.DATA.bookmarks.push(mark);
-          });
-        })
-        .then(() => renderAppBody());
+      var form = document.querySelector('#bookmark-form');
+      var reportButton = document.querySelector('#new-submit');
+      reportButton.addEventListener('click', function () {
+        form.reportValidity();
+      });
+      if (form.reportValidity()) {
+        let newItem = {
+          title: document.getElementById('new-title').value,
+          url: document.getElementById('new-url').value,
+          desc: document.getElementById('new-desc').value,
+          rating: document.getElementById('new-rating').value,
+        };
+        var reportVal = document.forms['bookmark-form'].reportValidity();
+        if (!reportVal) {
+          alert('Please check the form fields: ' + reportVal);
+        } else {
+          api.createItem(newItem);
+          store.DATA.adding = false;
+          // empty bookmarks and refresh from api after adding new item
+          store.DATA.bookmarks = [];
+          api.getItems()
+            .then((response) => {
+              response.forEach((mark) => {
+                store.DATA.bookmarks.push(mark);
+              });
+            })
+            .then(() => renderAppBody());
+        }
+      }
     }
   });
 };
