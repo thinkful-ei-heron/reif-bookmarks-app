@@ -8,6 +8,7 @@ const startApp = () => {
   bookmarks.handleDelete();
   bookmarks.handleNewSubmit();
   bookmarks.handleNewCancel();
+  bookmarks.handleLink();
 
   api.getItems()
     .then((response) => {

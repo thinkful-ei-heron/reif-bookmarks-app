@@ -9,13 +9,13 @@ const generateTopButtons = () => {
   let list = `<section id='top-buttons'>
     <button id='new-bookmark'>Create</button>
     <div class='filter-div'>
-    <label>Filter:</label>
     <select id="filter" name="rating"">
-      <option class='opOne' value="1">1</option>
-      <option class='opTwo' value="2">2</option>
-      <option class='opThree' value="3">3</option>
-      <option class='opFour' value="4">4</option>
+      <option class='opDefautl' value='filterDefault' selected='selected'>Filter</option>
       <option class='opFive' value="5">5</option>
+      <option class='opFour' value="4">4</option>
+      <option class='opThree' value="3">3</option>
+      <option class='opTwo' value="2">2</option>
+      <option class='opOne' value="1">1</option>
     </select>
     </div>
   </section>`;
@@ -23,19 +23,21 @@ const generateTopButtons = () => {
 };
 
 const generateBookmarkList = () => {
-  let output = '';
+  let listContainer = document.createElement('ul');
   store.DATA.bookmarks.map(item => {
     if (item.rating >= store.DATA.filter) {
-      output += `<section class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
+      let listItem = document.createElement('li');
+      listItem.innerHTML = `<li class='bookmark-list-item' id='${item.id}' data-bookmark-id='${item.id}'>
           <span class='bookmark-list-title'>${item.title}</span>
           <div class='list-item-right'>
             <span class='bookmark-list-rating'>${item.rating}</span>
             <img class='bookmark-list-trashcan' src='./src/trashCan.svg'>
           </div>
-        </section>`;
+          </li>`;
+      listContainer.appendChild(listItem);
     }
   });
-  return output;
+  return listContainer;
 };
 
 const generateNewBookmarkForm = () => {
@@ -60,7 +62,7 @@ const generateNewBookmarkForm = () => {
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
-          <option value="5">5</option>
+          <option value="5" selected="selected">5</option>
         </select>
       </div>
       <div id='form-button-container'>
@@ -74,11 +76,12 @@ const generateNewBookmarkForm = () => {
 
 // Renderers
 let appBody = document.getElementById('app-body');
-export const renderAppBody = () => {
-  const topButtons = generateTopButtons();
+export const renderAppBody = (filter) => {
+  // console.log(filter);
+  const topButtons = generateTopButtons(filter);
   const bookList = generateBookmarkList();
   appBody.innerHTML = topButtons;
-  appBody.innerHTML += bookList;
+  appBody.appendChild(bookList);
   handleFilter();
 };
 
@@ -88,26 +91,29 @@ const renderNewBookmarkForm = () => {
 };
 
 const renderExpandedDetails = (target) => {
-  let details = `<section id='bookmark-details'>
-  <button class='bookmark-link'>Visit Site</button>
+  let details = document.createElement('section');
+  details.id = 'bookmark-details';
+  details.innerHTML = `\n
+  <button class='bookmark-link' href='${target.url}'><a href='${target.url}' target='_blank' class='bookmark-link'>Visit Site</a></button>
   <span>${target.desc}</span>
-  <span>Rating: ${target.rating}</span>
-  </section>`;
+  <span>Rating: ${target.rating}</span>`;
+  console.log(details);
   return details;
 };
 export const handleExpand = () => {
   document.addEventListener('click', (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     if (event.target.classList.contains('bookmark-list-title')) {
       if (!document.querySelector('#bookmark-details')) {
         let tar = event.target.parentNode.dataset.bookmarkId;
         let tarBookmark = store.findBookmark(tar);
         tarBookmark.expanded = true;
         console.log(tar);
-        console.log(`clicked on ${tarBookmark}`);
-        event.target.parentNode.innerHTML += renderExpandedDetails(tarBookmark);
-      } else if (event.target.parentNode.lastChild.id === 'bookmark-details') {
-        event.target.parentNode.lastChild.remove();
+        // console.log(`clicked on ${tarBookmark}`);
+        // let newDet = 
+        event.target.parentNode.parentNode.appendChild(renderExpandedDetails(tarBookmark));
+      } else {
+        document.getElementById('bookmark-details').remove();
         let tar = event.target.parentNode.dataset.bookmarkId;
         let tarBookmark = store.findBookmark(tar);
         tarBookmark.expanded = false;
@@ -191,4 +197,15 @@ export const handleFilter = () => {
     store.DATA.filter = dropDown.options[dropDown.selectedIndex].text;
     renderAppBody();
   });
+};
+
+export const handleLink = () => {
+  document.addEventListener('click', event => {
+    event.preventDefault();
+    if (event.target.className === 'bookmark-link') {
+      console.log('clicked link');
+      window.open(event.target.getAttribute('href'));
+    }
+  });
+  // window.open(url);
 };
